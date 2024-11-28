@@ -9,7 +9,7 @@ enum class DetectFunction(val writeName: String) {
     Emails("emails") {
         override fun scan(text: String): Int = regexDetector(
             text,
-            """(?<=[-, ]|^)[a-z0-9_.+-]+@(?!([a-z0-9-.]*?sbrf\.ru|sberbank\.ru))[a-z0-9-.]+?\.[a-z]{2,3}(?=[a-z]|$)"""
+            """(?<=[-, ()=*]|^)[a-z0-9_.+-]+@(?!([a-z0-9-.]*?sbrf\.ru|sberbank\.ru))[a-z0-9-.]+?\.[a-z]{2,3}(?=[a-z]|$)"""
                 .toRegex(setOf(RegexOption.IGNORE_CASE, RegexOption.MULTILINE))
         ).count()
     },
@@ -17,7 +17,7 @@ enum class DetectFunction(val writeName: String) {
     Phones("phones") {
         override fun scan(text: String): Int = regexDetector(
             text,
-            """(?<=[-, ]|^)((\+?7)|8)[ \t\-]?\(?[489][0-9]{2}\)?[ \t\-]?[0-9]{3}[ \t\-]?[0-9]{2}[ \t\-]?[0-9]{2}(?=\W|$)"""
+            """(?<=[-, ()=*]|^)((\+?7)|8)[ \t\-]?\(?[489][0-9]{2}\)?[ \t\-]?[0-9]{3}[ \t\-]?[0-9]{2}[ \t\-]?[0-9]{2}(?=\W|$)"""
                 .toRegex(setOf(RegexOption.MULTILINE))
         ).count()
     },
@@ -43,7 +43,7 @@ enum class DetectFunction(val writeName: String) {
 
             val cards = regexDetector(
                 text,
-                """(?<=[-:,\s]|^)(([0-9]{4}[ ][0-9]{4}[ ][0-9]{4}[ ][0-9]{4})|([0-9]{16}))(?=\b)"""
+                """(?<=[-:,()=*\s]|^)(([0-9]{4}[ ][0-9]{4}[ ][0-9]{4}[ ][0-9]{4})|([0-9]{16}))(?=\b)"""
                     .toRegex(setOf(RegexOption.MULTILINE))
             )
             return cards.map {
@@ -85,7 +85,7 @@ enum class DetectFunction(val writeName: String) {
 
             return regexDetector(
                 text,
-                """(?<=[-,\s]|^)[0-9]{3}[ -]?[0-9]{3}[ -]?[0-9]{3}[ -]?[0-9]{2}(?=\b)"""
+                """(?<=[-,()=*\s]|^)[0-9]{3}[ -]?[0-9]{3}[ -]?[0-9]{3}[ -]?[0-9]{2}(?=\b)"""
                     .toRegex(setOf(RegexOption.MULTILINE))
             ).filter {
                 isSnilsCorrect(it)
@@ -164,7 +164,7 @@ enum class DetectFunction(val writeName: String) {
             }
             return customRegexDetector(
                 text,
-                """(?<=[-:,\s]|^)[0-9]{12}(?=\b)"""
+                """(?<=[-:,()=*\s]|^)[0-9]{12}(?=\b)"""
                     .toRegex(setOf(RegexOption.MULTILINE))
             ).filter {
                 isInnValid(it)
