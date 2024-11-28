@@ -1,4 +1,4 @@
-package ru.packetdima.datascanner.common
+package info.downdetector.bigdatascanner.common
 
 import java.io.File
 import kotlin.test.Test
@@ -161,6 +161,13 @@ internal class DetectFunctionTest {
         val file = javaClass.getResource("/testFiles/ipv6_false.txt")?.file
         assertNotNull(file)
         assertEquals(0, getCountOfAttribute(file, DetectFunction.IPv6))
+    }
+
+    @Test
+    fun testPhones() {
+        val file = javaClass.getResource("/testFiles/phones.txt")?.file
+        assertNotNull(file)
+        assertEquals(40, getCountOfAttribute(file, DetectFunction.Phones))
     }
 
 

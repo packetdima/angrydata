@@ -1,5 +1,5 @@
-package ru.packetdima.datascanner.common
-import ru.packetdima.datascanner.common.constants.CardBins
+package info.downdetector.bigdatascanner.common
+import info.downdetector.bigdatascanner.common.constants.CardBins
 
 @Suppress("unused")
 enum class DetectFunction(val writeName: String) {
@@ -17,7 +17,7 @@ enum class DetectFunction(val writeName: String) {
     Phones("phones") {
         override fun scan(text: String): Int = regexDetector(
             text,
-            """(?<=[-, ]|^)((\+?7)|8)?[ \t\-]?\(?[489][0-9]{2}\)?[ \t\-]?[0-9]{3}[ \t\-]?[0-9]{2}[ \t\-]?[0-9]{2}(?=\W|$)"""
+            """(?<=[-, ]|^)((\+?7)|8)[ \t\-]?\(?[489][0-9]{2}\)?[ \t\-]?[0-9]{3}[ \t\-]?[0-9]{2}[ \t\-]?[0-9]{2}(?=\W|$)"""
                 .toRegex(setOf(RegexOption.MULTILINE))
         ).count()
     },

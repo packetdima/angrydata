@@ -1,4 +1,4 @@
-package ru.packetdima.datascanner.common
+package info.downdetector.bigdatascanner.common
 
 class Cleaner {
     /*This class is responsible for cleaning documents text*/
@@ -6,7 +6,7 @@ class Cleaner {
         // delete all junk from text
         private fun delGarbageCharacters(text: String): String {
             val patternTags = """<[^>]*?>""".toRegex()
-            val pattern = """([^а-яА-Яa-zA-Z@,.:0-9- ])|(nbsp)|(quot)""".toRegex()
+            val pattern = """([^а-яА-Яa-zA-Z@,.:0-9- ()*=+])|(nbsp)|(quot)""".toRegex()
             return text.replace(patternTags, "  ").replace(pattern, "  ")
         }
 
