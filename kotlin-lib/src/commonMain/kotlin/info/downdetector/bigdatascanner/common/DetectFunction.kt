@@ -2,7 +2,7 @@ package info.downdetector.bigdatascanner.common
 import info.downdetector.bigdatascanner.common.constants.CardBins
 
 @Suppress("unused")
-enum class DetectFunction(val writeName: String) {
+enum class DetectFunction(override val writeName: String): IDetectFunction {
     /** This class is responsible on detection and
      * extraction information from documents
      **/
@@ -241,8 +241,6 @@ enum class DetectFunction(val writeName: String) {
                 .toRegex(setOf(RegexOption.MULTILINE))
         ).count()
     };
-
-    abstract fun scan(text: String): Int
 }
 
 private fun regexDetector(text: String, regex: Regex): Sequence<String> {
