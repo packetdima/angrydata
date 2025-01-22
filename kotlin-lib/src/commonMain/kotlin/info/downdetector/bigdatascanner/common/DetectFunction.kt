@@ -9,7 +9,7 @@ enum class DetectFunction(override val writeName: String): IDetectFunction {
     Emails("emails") {
         override fun scan(text: String): Int = regexDetector(
             text,
-            """(?<=[-, ()=*]|^)[a-z0-9_.+-]+@(?!([a-z0-9-.]*?sbrf\.ru|sberbank\.ru))[a-z0-9-.]+?\.[a-z]{2,3}(?=[a-z]|$)"""
+            """(?<=[-, ()=*]|^)[a-zA-Z0-9_.+-]+@[a-z0-9-.]+?\.[a-z]{2,}(?=\W|$)"""
                 .toRegex(setOf(RegexOption.IGNORE_CASE, RegexOption.MULTILINE))
         ).count()
     },
