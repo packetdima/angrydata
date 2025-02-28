@@ -1,4 +1,4 @@
-package ru.packetdima.datascanner.common.constants
+package info.downdetector.bigdatascanner.common.constants
 
 expect object CardBins {
     val cardBins: List<String>

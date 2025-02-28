@@ -1,4 +1,4 @@
-package ru.packetdima.datascanner.common.constants
+package info.downdetector.bigdatascanner.common.constants
 
 import java.io.BufferedReader
 import java.io.InputStreamReader
