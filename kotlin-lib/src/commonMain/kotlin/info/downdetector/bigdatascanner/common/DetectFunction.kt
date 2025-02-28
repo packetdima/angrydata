@@ -1,33 +1,47 @@
 package info.downdetector.bigdatascanner.common
+
 import info.downdetector.bigdatascanner.common.constants.CardBins
-import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Suppress("unused")
 @Serializable(with = DetectFunctionSerializer::class)
-@SerialName("DetectFunction")
-enum class DetectFunction(override val writeName: String): IDetectFunction {
+enum class DetectFunction(override val writeName: String) : IDetectFunction {
     /** This class is responsible on detection and
      * extraction information from documents
      **/
-    Emails("emails") {
-        override fun scan(text: String): Int = regexDetector(
+    Emails("emails"),
+    Phones("phones"),
+    CardNumbers("card_numbers"),
+    CarNumber("car_numbers"),
+    SNILS("snilses"),
+    Passport("passports"),
+    OMS("omses"),
+    INN("inns"),
+    AccountNumber("account_number"),
+    Address("address"),
+    BlackList("black_list"),
+    ValuableInfo("valuable_info"),
+    Login("logins"),
+    Password("passwords"),
+    CVV("cvv"),
+    Name("full_names"),
+    IP("ips"),
+    IPv6("ipv6s");
+
+    override fun scan(text: String): Int = when (this) {
+        Emails -> regexDetector(
             text,
             """(?<=[-, ()=*]|^)[a-zA-Z0-9_.+-]+@[a-z0-9-.]+?\.[a-z]{2,}(?=\W|$)"""
                 .toRegex(setOf(RegexOption.IGNORE_CASE, RegexOption.MULTILINE))
         ).count()
-    },
 
-    Phones("phones") {
-        override fun scan(text: String): Int = regexDetector(
+        Phones -> regexDetector(
             text,
             """(?<=[-, ()=*]|^)((\+?7)|8)[ \t\-]?\(?[489][0-9]{2}\)?[ \t\-]?[0-9]{3}[ \t\-]?[0-9]{2}[ \t\-]?[0-9]{2}(?=\W|$)"""
                 .toRegex(setOf(RegexOption.MULTILINE))
         ).count()
-    },
 
-    CardNumbers("card_numbers") {
-        override fun scan(text: String): Int {
+        CardNumbers -> {
             fun isBinValid(card: String): Boolean {
                 return CardBins.cardBins.contains(card.substring(0, 4))
             }
@@ -50,7 +64,7 @@ enum class DetectFunction(override val writeName: String): IDetectFunction {
                 """(?<=[-:,()=*\s]|^)(([0-9]{4}[ ][0-9]{4}[ ][0-9]{4}[ ][0-9]{4})|([0-9]{16}))(?=\b)"""
                     .toRegex(setOf(RegexOption.MULTILINE))
             )
-            return cards.map {
+            cards.map {
                 it.replace(" ", "").replace("-", "").trim()
             }.filter {
                 it != "0000000000000000"
@@ -58,18 +72,19 @@ enum class DetectFunction(override val writeName: String): IDetectFunction {
                         && isCardValid(it)
             }.distinct().count()
         }
-    },
 
-    CarNumber("car_numbers") {
-        override fun scan(text: String): Int = regexDetector(
+        CarNumber -> regexDetector(
             text,
             """(гос|номер|авто|рег).{0,15}([авекмнорстух][ \t]?[0-9]{3}[ \t]?[авекмнорстух]{2}[ \t]?[0-9]{2,3})"""
                 .toRegex(setOf(RegexOption.IGNORE_CASE, RegexOption.MULTILINE))
         ).count()
-    },
-    SNILS("snilses") {
-        override fun scan(text: String): Int {
-            //  function to find only valid snils numbers
+
+        SNILS -> {
+            /**
+             * This function checks if the given SNILS is correct.
+             * @param input the SNILS to check
+             * @return true if the SNILS is correct, false otherwise
+             */
             fun isSnilsCorrect(input: String): Boolean {
                 var summ = 0
                 val snils = input.replace(" ", "").replace("-", "").trim()
@@ -87,7 +102,7 @@ enum class DetectFunction(override val writeName: String): IDetectFunction {
                 return snils.substring(snils.length - 2 until snils.length) == controlSum
             }
 
-            return regexDetector(
+            regexDetector(
                 text,
                 """(?<=[-,()=*\s]|^)[0-9]{3}[ -]?[0-9]{3}[ -]?[0-9]{3}[ -]?[0-9]{2}(?=\b)"""
                     .toRegex(setOf(RegexOption.MULTILINE))
@@ -95,23 +110,24 @@ enum class DetectFunction(override val writeName: String): IDetectFunction {
                 isSnilsCorrect(it)
             }.count()
         }
-    },
-    Passport("passports") {
-        override fun scan(text: String): Int =
-            (regexDetector(
-                text,
-                """([п]аспорт[ \t-]?[0-9]{2}[ \t]?[0-9]{2}[ \t]?[0-9]{6})"""
-                    .toRegex(setOf(RegexOption.IGNORE_CASE, RegexOption.MULTILINE))
-            ) + regexDetector(
-                text,
-                """[сc]ерия[ \t-]?[0-9]{2}(\s|\t)?[0-9]{2}[ \t,]?([н]омер)?[ \t-]?[0-9]{6}?"""
-                    .toRegex(setOf(RegexOption.IGNORE_CASE, RegexOption.MULTILINE))
-            )).distinct().count()
 
-    },
-    OMS("omses") {
-        override fun scan(text: String): Int {
+        Passport -> (regexDetector(
+            text,
+            """([п]аспорт[ \t-]?[0-9]{2}[ \t]?[0-9]{2}[ \t]?[0-9]{6})"""
+                .toRegex(setOf(RegexOption.IGNORE_CASE, RegexOption.MULTILINE))
+        ) + regexDetector(
+            text,
+            """[сc]ерия[ \t-]?[0-9]{2}(\s|\t)?[0-9]{2}[ \t,]?([н]омер)?[ \t-]?[0-9]{6}?"""
+                .toRegex(setOf(RegexOption.IGNORE_CASE, RegexOption.MULTILINE))
+        )).distinct().count()
+
+        OMS -> {
             // validate oms
+            /**
+             * Checks if the given OMS is correct.
+             * @param input the OMS to check
+             * @return true if the OMS is correct, false otherwise
+             */
             fun isOmsValid(input: String): Boolean {
                 val oms = input.replace("-", "").replace("""\s+""".toRegex(), "")
                 val key = Character.getNumericValue(oms.last())
@@ -137,7 +153,7 @@ enum class DetectFunction(override val writeName: String): IDetectFunction {
                 return checker == key || (checker == 10 && key == 0)
             }
 
-            return customRegexDetector(
+            customRegexDetector(
                 text,
                 """(?<=\D|^)(?<=(омс|полис|страховка|страхование))(\s)[0-9]{4}[ \t-]*?[0-9]{4}[ \t-]*?[0-9]{4}[ \t-]*?[0-9]{4}(?=\D|$)"""
                     .toRegex(setOf(RegexOption.IGNORE_CASE, RegexOption.MULTILINE))
@@ -145,10 +161,14 @@ enum class DetectFunction(override val writeName: String): IDetectFunction {
                 isOmsValid(it)
             }.count()
         }
-    },
-    INN("inns") {
-        override fun scan(text: String): Int {
+
+        INN -> {
             // validate inn
+            /**
+             * Checks if the given INN is correct.
+             * @param input the INN to check
+             * @return true if the INN is correct, false otherwise
+             */
             fun isInnValid(input: String): Boolean {
                 val inn = input.replace("-", "").replace(" ", "").trim()
                 // control sequences
@@ -166,7 +186,7 @@ enum class DetectFunction(override val writeName: String): IDetectFunction {
                 val key2 = (summ2 % 11).toString().last()
                 return key1 == inn[10] && key2 == inn[11]
             }
-            return customRegexDetector(
+            customRegexDetector(
                 text,
                 """(?<=[-:,()=*\s]|^)[0-9]{12}(?=\b)"""
                     .toRegex(setOf(RegexOption.MULTILINE))
@@ -174,78 +194,69 @@ enum class DetectFunction(override val writeName: String): IDetectFunction {
                 isInnValid(it)
             }.count()
         }
-    },
-    AccountNumber("account_number") {
-        override fun scan(text: String): Int  = regexDetector(
+
+        AccountNumber -> regexDetector(
             text,
             """(?<=\D|^)40[0-9]{3}(810|840|978)[0-9]{12}(?=\D|$)"""
                 .toRegex(setOf(RegexOption.MULTILINE))
         ).count()
-    },
-    Address("address") {
-        override fun scan(text: String): Int = regexDetector(
+
+        Address -> regexDetector(
             text,
             """(г\.|р-н|обл\.|ул\.|гор\.).{4,70}(д\.|дом)"""
                 .toRegex(setOf(RegexOption.IGNORE_CASE, RegexOption.MULTILINE))
         ).count()
-    },
-    BlackList("black_list") {
-        override fun scan(text: String): Int = regexDetector(
+
+        BlackList -> regexDetector(
             text,
             """(\.|\s|^)(БЕЗОПАСНОСТ|ВНУТРИБАНК|ФСБ|ФЕДЕРАЛ|ФСО|РАЗВЕДК|НАЦИОНАЛЬН|ГВАРДИ|МИНИСТЕРСТВО|МВД|ОБОРОН|МЧС|ПРЕМЬЕР|VIP|МВС|МВК|СКУД|ИНКАССАЦИЯ|ГОСУДАРСТВ)(\.|\s|$)"""
                 .toRegex(setOf(RegexOption.IGNORE_CASE, RegexOption.MULTILINE))
         ).count()
-    },
-    ValuableInfo("valuable_info") {
-        override fun scan(text: String): Int = regexDetector(
+
+        ValuableInfo -> regexDetector(
             text,
             """(\.|\s|^)(СЕКРЕТ|КОНФИДЕНЦИАЛЬН|КОМПЕНСАЦ|КОММЕРЧ|ТАЙНА|КЛЮЧ|ШИФР|PIN|SECRET|PRIVACY|ДЕТАЛИ ПЛАТЕЖА|НАЗНАЧЕНИЕ ПЛАТЕЖА|DETAILS OF PAYMENT|PAYMENT DETAILS)(\.|\s|$)"""
                 .toRegex(setOf(RegexOption.IGNORE_CASE, RegexOption.MULTILINE))
         ).count()
-    },
-    Login("logins") {
-        override fun scan(text: String): Int = regexDetector(
+
+        Login -> regexDetector(
             text,
             """(логин|login)(:|\s)\s?[a-z0-9_-]\S{3,25}"""
                 .toRegex(setOf(RegexOption.IGNORE_CASE, RegexOption.MULTILINE))
         ).count()
-    },
-    Password("passwords") {
-        override fun scan(text: String): Int = regexDetector(
+
+        Password -> regexDetector(
             text,
             """(((password|пароль)\s((?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@$}{'?;,:=+_\-]*))\S{3,25})|((password|пароль):\s?\S{3,25}))"""
                 .toRegex(setOf(RegexOption.IGNORE_CASE, RegexOption.MULTILINE))
         ).count()
-    },
-    CVV("cvv") {
-        override fun scan(text: String): Int = regexDetector(
+
+        CVV -> regexDetector(
             text,
             """(\.|\s|^)(cvc|cvv|cav|cvc2|cvv2|cav2)(:|\s|:\s)[0-9]{3}(\.|\s|$)"""
                 .toRegex(setOf(RegexOption.IGNORE_CASE, RegexOption.MULTILINE))
         ).count()
-    },
-    Name("full_names") {
-        override fun scan(text: String): Int = regexDetector(
+
+        Name -> regexDetector(
             text,
             """(^|\s)((([А-ЯЁ][а-яё]+\s)([А-ЯЁ][а-яё]+[ая]\s)([А-ЯЁ][а-яё]+на))|(([А-ЯЁ][а-яё]+\s)([А-ЯЁ][а-яё]+[^ая]\s)([А-ЯЁ][а-яё]+(ич|ь))))($|\W|\s)"""
                 .toRegex(setOf(RegexOption.MULTILINE))
         ).count()
-    },
-    IP("ips") {
-        override fun scan(text: String): Int = regexDetector(
+
+        IP -> regexDetector(
             text,
             """(^|\s)((25[0-5]|(2[0-4]|1\d|[1-9]|)\d)\.){3}(25[0-5]|(2[0-4]|1\d|[1-9]|)\d)(${'$'}|\s)"""
                 .toRegex(setOf(RegexOption.MULTILINE))
         ).count()
-    },
-    IPv6("ipv6s") {
-        override fun scan(text: String): Int = regexDetector(
+
+        IPv6 -> regexDetector(
             text,
             """(^|\s)(([0-9a-fA-F]{4}:){7}[0-9a-fA-F]{4})(${'$'}|\s)""" // только адреса без сокращений
                 .toRegex(setOf(RegexOption.MULTILINE))
         ).count()
-    };
+    }
 }
+
 
 private fun regexDetector(text: String, regex: Regex): Sequence<String> {
     return customRegexDetector(text, regex).distinct()
