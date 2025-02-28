@@ -1,4 +1,4 @@
-package ru.packetdima.datascanner.common
+package info.downdetector.bigdatascanner.common
 
 import kotlin.test.assertEquals
 import kotlin.test.Test

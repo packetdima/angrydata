@@ -1,4 +1,5 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+import com.vanniktech.maven.publish.SonatypeHost
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import java.io.ByteArrayOutputStream
@@ -7,11 +8,12 @@ plugins {
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.kotlinx.kover)
     alias(libs.plugins.shadow)
-    id("maven-publish")
+    alias(libs.plugins.maven.publish)
+    alias(libs.plugins.kotlin.serialization)
 }
 
-group = "ru.packetdima.datascanner"
-version = "1.0.0-SNAPSHOT"
+group = "info.downdetector.bigdatascanner"
+version = "1.0.4"
 description = "Data Scanner Library"
 
 
@@ -38,6 +40,7 @@ kotlin {
         commonMain {
             dependencies {
                 implementation(libs.kotlin.stdlib)
+                implementation(libs.kotlinx.serialization)
             }
         }
         commonTest {
@@ -72,4 +75,41 @@ koverReport {
             classes("*")
         }
     }
+}
+
+mavenPublishing {
+    coordinates(
+        groupId = "info.downdetector.bigdatascanner",
+        artifactId = "datascanner",
+        version = project.version.toString()
+    )
+
+    pom {
+        name.set("Big Data Scanner library for Java and Kotlin")
+        description.set("Big Data Scanner library for Java and Kotlin")
+        url.set("https://github.com/packetdima/angrydata")
+
+        licenses {
+            license {
+                name.set("Apache-2.0")
+                url.set("https://www.apache.org/licenses/LICENSE-2.0")
+            }
+        }
+
+        developers {
+            developer {
+                id.set("stellalupus")
+                name.set("StellaLupus")
+                email.set("soulofpain.k@gmail.com")
+            }
+        }
+
+        scm {
+            url.set("https://github.com/packetdima/angrydata")
+        }
+    }
+
+    publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
+
+    signAllPublications()
 }
