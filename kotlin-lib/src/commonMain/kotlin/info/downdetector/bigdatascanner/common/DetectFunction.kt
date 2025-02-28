@@ -1,7 +1,11 @@
 package info.downdetector.bigdatascanner.common
 import info.downdetector.bigdatascanner.common.constants.CardBins
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
 @Suppress("unused")
+@Serializable(with = DetectFunctionSerializer::class)
+@SerialName("DetectFunction")
 enum class DetectFunction(override val writeName: String): IDetectFunction {
     /** This class is responsible on detection and
      * extraction information from documents

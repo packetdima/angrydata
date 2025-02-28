@@ -1,12 +1,14 @@
 [versions]
-kotlin = "2.0.20"
+kotlin = "2.1.10"
 mpublish = "0.30.0"
 
 [libraries]
 kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlin" }
+kotlinx-serialization = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version = "1.8.0" }
 
 [plugins]
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlinx-kover = { id = "org.jetbrains.kotlinx.kover", version = "0.7.6"}
 shadow = { id = "com.github.johnrengelman.shadow", version = "8.1.1" }
 maven-publish = { id = "com.vanniktech.maven.publish", version.ref = "mpublish" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }

@@ -9,10 +9,11 @@ plugins {
     alias(libs.plugins.kotlinx.kover)
     alias(libs.plugins.shadow)
     alias(libs.plugins.maven.publish)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 group = "info.downdetector.bigdatascanner"
-version = "1.0.3"
+version = "1.0.4"
 description = "Data Scanner Library"
 
 
@@ -39,6 +40,7 @@ kotlin {
         commonMain {
             dependencies {
                 implementation(libs.kotlin.stdlib)
+                implementation(libs.kotlinx.serialization)
             }
         }
         commonTest {
