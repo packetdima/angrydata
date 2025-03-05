@@ -61,7 +61,7 @@ enum class DetectFunction(override val writeName: String) : IDetectFunction {
 
             val cards = regexDetector(
                 text,
-                """(?<=[-:,()=*\s]|^)(([0-9]{4}[ ][0-9]{4}[ ][0-9]{4}[ ][0-9]{4})|([0-9]{16}))(?=\b)"""
+                """(?<=[-:,()=*\s]|^)(([0-9]{4}[ ][0-9]{4}[ ][0-9]{4}[ ][0-9]{4})|([0-9]{16}))(?=[-(),*\s]|$)"""
                     .toRegex(setOf(RegexOption.MULTILINE))
             )
             cards.map {
@@ -104,7 +104,7 @@ enum class DetectFunction(override val writeName: String) : IDetectFunction {
 
             regexDetector(
                 text,
-                """(?<=[-,()=*\s]|^)[0-9]{3}[ -]?[0-9]{3}[ -]?[0-9]{3}[ -]?[0-9]{2}(?=\b)"""
+                """(?<=[-,()=*\s]|^)[0-9]{3}[ -]?[0-9]{3}[ -]?[0-9]{3}[ -]?[0-9]{2}(?=[-(),*\s]|$)"""
                     .toRegex(setOf(RegexOption.MULTILINE))
             ).filter {
                 isSnilsCorrect(it)
@@ -188,7 +188,7 @@ enum class DetectFunction(override val writeName: String) : IDetectFunction {
             }
             customRegexDetector(
                 text,
-                """(?<=[-:,()=*\s]|^)[0-9]{12}(?=\b)"""
+                """(?<=[-:,()=*\s]|^)[0-9]{12}(?=[-(),*\s]|$)"""
                     .toRegex(setOf(RegexOption.MULTILINE))
             ).filter {
                 isInnValid(it)
