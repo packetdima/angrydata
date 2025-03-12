@@ -6,8 +6,12 @@ class Cleaner {
         // delete all junk from text
         private fun delGarbageCharacters(text: String): String {
             val patternTags = """<[^>]*?>""".toRegex()
-            val pattern = """([^а-яА-Яa-zA-Z@,.:0-9- ()*=+])|(nbsp)|(quot)""".toRegex()
-            return text.replace(patternTags, "  ").replace(pattern, "  ")
+            val singleSpacePattern = """${160.toChar()}""".toRegex()
+            val pattern = """([^а-яА-Яa-zA-Z@,.:0-9- ()*=+])|(quot)""".toRegex()
+            return text
+                .replace(singleSpacePattern, " ")
+                .replace(patternTags, "  ")
+                .replace(pattern, "  ")
         }
 
         // normalize spaces

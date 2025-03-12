@@ -113,7 +113,7 @@ enum class DetectFunction(override val writeName: String) : IDetectFunction {
 
         Passport -> (regexDetector(
             text,
-            """([п]аспорт[ \t-]?[0-9]{2}[ \t]?[0-9]{2}[ \t]?[0-9]{6})"""
+            """([п]аспорт[ \t-]?([а-яА-Я]*[ \t-]){0,2}[0-9]{2}[ \t]?[0-9]{2}[ \t]?[0-9]{6})"""
                 .toRegex(setOf(RegexOption.IGNORE_CASE, RegexOption.MULTILINE))
         ) + regexDetector(
             text,
