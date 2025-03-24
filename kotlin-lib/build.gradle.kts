@@ -12,9 +12,10 @@ plugins {
 }
 
 group = "info.downdetector.bigdatascanner"
-version = "1.0.6"
+version = "1.0.7"
 description = "Data Scanner Library"
 
+val targetName = "native"
 
 kotlin {
     jvm {
@@ -34,6 +35,25 @@ kotlin {
         }
     }
 
+    val hostOs = System.getProperty("os.name")
+    val isMingwX64 = hostOs.startsWith("Windows")
+    val isArm64 = System.getProperty("os.arch") == "aarch64"
+    val nativeTarget = when {
+        hostOs == "Mac OS X" && !isArm64 -> macosX64(targetName)
+        hostOs == "Linux" && !isArm64 -> linuxX64(targetName)
+        hostOs == "Mac OS X" && isArm64 -> macosArm64(targetName)
+        hostOs == "Linux" && isArm64 -> linuxArm64(targetName)
+        isMingwX64 -> mingwX64(targetName)
+        else -> throw GradleException("Host OS is not supported in Kotlin/Native.")
+    }
+    nativeTarget.apply {
+        binaries {
+            sharedLib {
+                baseName = rootProject.name
+            }
+        }
+    }
+
     sourceSets {
         commonMain {
             dependencies {
@@ -44,6 +64,15 @@ kotlin {
         commonTest {
             dependencies {
                 implementation(kotlin("test"))
+            }
+        }
+    }
+
+
+    targets.configureEach {
+        compilations.configureEach {
+            compileTaskProvider.get().compilerOptions {
+                freeCompilerArgs.add("-Xexpect-actual-classes")
             }
         }
     }
