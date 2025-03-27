@@ -12,7 +12,7 @@ plugins {
 }
 
 group = "info.downdetector.bigdatascanner"
-version = "1.0.6"
+version = "1.0.7"
 description = "Data Scanner Library"
 
 
