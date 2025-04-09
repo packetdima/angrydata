@@ -20,7 +20,6 @@ enum class DetectFunction(override val writeName: String) : IDetectFunction {
     INN("inns"),
     AccountNumber("account_number"),
     Address("address"),
-    BlackList("black_list"),
     ValuableInfo("valuable_info"),
     Login("logins"),
     Password("passwords"),
@@ -208,15 +207,9 @@ enum class DetectFunction(override val writeName: String) : IDetectFunction {
                 .toRegex(setOf(RegexOption.IGNORE_CASE, RegexOption.MULTILINE))
         ).count()
 
-        BlackList -> regexDetector(
-            text,
-            """(\.|\s|^)(БЕЗОПАСНОСТ|ВНУТРИБАНК|ФСБ|ФЕДЕРАЛ|ФСО|РАЗВЕДК|НАЦИОНАЛЬН|ГВАРДИ|МИНИСТЕРСТВО|МВД|ОБОРОН|МЧС|ПРЕМЬЕР|VIP|МВС|МВК|СКУД|ИНКАССАЦИЯ|ГОСУДАРСТВ)(\.|\s|$)"""
-                .toRegex(setOf(RegexOption.IGNORE_CASE, RegexOption.MULTILINE))
-        ).count()
-
         ValuableInfo -> regexDetector(
             text,
-            """(\.|\s|^)(СЕКРЕТ|КОНФИДЕНЦИАЛЬН|КОМПЕНСАЦ|КОММЕРЧ|ТАЙНА|КЛЮЧ|ШИФР|PIN|SECRET|PRIVACY|ДЕТАЛИ ПЛАТЕЖА|НАЗНАЧЕНИЕ ПЛАТЕЖА|DETAILS OF PAYMENT|PAYMENT DETAILS)(\.|\s|$)"""
+            """(\.|\s|^)(СЕКРЕТ|КОНФИДЕНЦИАЛЬН|КОМПЕНСАЦ|КОММЕРЧ|ТАЙНА|КЛЮЧ|ШИФР|PIN|SECRET|PRIVACY|ДЕТАЛИ ПЛАТЕЖА|НАЗНАЧЕНИЕ ПЛАТЕЖА|DETAILS OF PAYMENT|PAYMENT DETAILS|БЕЗОПАСНОСТ|ВНУТРИБАНК|ФСБ|ФЕДЕРАЛ|ФСО|РАЗВЕДК|НАЦИОНАЛЬН|ГВАРДИ|МИНИСТЕРСТВО|МВД|ОБОРОН|МЧС|ПРЕМЬЕР|VIP|МВС|МВК|СКУД|ИНКАССАЦИЯ|ГОСУДАРСТВ)[А-Яа-яA-Z-a-z]*(\.|\s|$)"""
                 .toRegex(setOf(RegexOption.IGNORE_CASE, RegexOption.MULTILINE))
         ).count()
 
