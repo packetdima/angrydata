@@ -1,123 +1,134 @@
 import ctypes
+from ctypes import c_bool, c_char, c_short, c_int, c_long, c_ubyte, c_ushort, c_uint, c_byte, c_float, c_double, POINTER, Structure, c_ulong, CFUNCTYPE, c_char_p
 
-angrydata = ctypes.CDLL("../library/build/bin/native/releaseShared/AngryData.dll")
-
+lib = ctypes.CDLL("../library/build/bin/native/releaseShared/AngryData.dll")
 # Define the necessary types
-class AngryData_KNativePtr(ctypes.Structure):
+class AngryData_KNativePtr(Structure):
     pass  # Define the structure as needed
 
-class AngryData_KType(ctypes.Structure):
+class AngryData_KType(Structure):
     pass  # Define the structure as needed
 
-class AngryData_KBoolean(ctypes.c_bool):
+class AngryData_KBoolean(c_bool):
     pass  # Assuming it's an integer type
 
-class AngryData_KByte(ctypes.c_byte):
+class AngryData_KByte(c_byte):
     pass  # Assuming it's a byte type
 
-class AngryData_KShort(ctypes.c_short):
+class AngryData_KShort(c_short):
     pass  # Assuming it's a short type
 
-class AngryData_KInt(ctypes.c_int):
+class AngryData_KInt(c_int):
     pass  # Assuming it's an int type
 
-class AngryData_KLong(ctypes.c_long):
+class AngryData_KLong(c_long):
     pass  # Assuming it's a long type
 
-class AngryData_KFloat(ctypes.c_float):
+class AngryData_KFloat(c_float):
     pass  # Assuming it's a float type
 
-class AngryData_KDouble(ctypes.c_double):
+class AngryData_KDouble(c_double):
     pass  # Assuming it's a double type
 
-class AngryData_KChar(ctypes.c_char):
+class AngryData_KChar(c_char):
     pass  # Assuming it's a wchar type
 
-class AngryData_KUByte(ctypes.c_ubyte):
+class AngryData_KUByte(c_ubyte):
     pass  # Assuming it's an unsigned byte type
 
-class AngryData_KUShort(ctypes.c_ushort):
+class AngryData_KUShort(c_ushort):
     pass  # Assuming it's an unsigned short type
 
-class AngryData_KUInt(ctypes.c_uint):
+class AngryData_KUInt(c_uint):
     pass  # Assuming it's an unsigned int type
 
-class AngryData_KULong(ctypes.c_ulong):
+class AngryData_KULong(c_ulong):
     pass  # Assuming it's an unsigned long type
 
 # Define function pointer types
-DisposeStablePointerType = ctypes.CFUNCTYPE(None, AngryData_KNativePtr)
-DisposeStringType = ctypes.CFUNCTYPE(None, ctypes.c_char_p)
-IsInstanceType = ctypes.CFUNCTYPE(AngryData_KBoolean, AngryData_KNativePtr, ctypes.POINTER(AngryData_KType))
+DisposeStablePointerType = CFUNCTYPE(None, AngryData_KNativePtr)
+DisposeStringType = CFUNCTYPE(None, c_char_p)
+IsInstanceType = CFUNCTYPE(AngryData_KBoolean, AngryData_KNativePtr, POINTER(AngryData_KType))
 
-createNullableByteType = ctypes.CFUNCTYPE(ctypes.POINTER(AngryData_KByte), AngryData_KByte)
-getNonNullValueOfByteType = ctypes.CFUNCTYPE(AngryData_KByte, ctypes.POINTER(AngryData_KByte))
+createNullableByteType = CFUNCTYPE(POINTER(AngryData_KByte), AngryData_KByte)
+getNonNullValueOfByteType = CFUNCTYPE(AngryData_KByte, POINTER(AngryData_KByte))
 
-createNullableShortType = ctypes.CFUNCTYPE(ctypes.POINTER(AngryData_KShort), AngryData_KShort)
-getNonNullValueOfShortType = ctypes.CFUNCTYPE(AngryData_KShort, ctypes.POINTER(AngryData_KShort))
+createNullableShortType = CFUNCTYPE(POINTER(AngryData_KShort), AngryData_KShort)
+getNonNullValueOfShortType = CFUNCTYPE(AngryData_KShort, POINTER(AngryData_KShort))
 
-createNullableIntType = ctypes.CFUNCTYPE(ctypes.POINTER(AngryData_KInt), AngryData_KInt)
-getNonNullValueOfIntType = ctypes.CFUNCTYPE(AngryData_KInt, ctypes.POINTER(AngryData_KInt))
+createNullableIntType = CFUNCTYPE(POINTER(AngryData_KInt), AngryData_KInt)
+getNonNullValueOfIntType = CFUNCTYPE(AngryData_KInt, POINTER(AngryData_KInt))
 
-createNullableLongType = ctypes.CFUNCTYPE(ctypes.POINTER(AngryData_KLong), AngryData_KLong)
-getNonNullValueOfLongType = ctypes.CFUNCTYPE(AngryData_KLong, ctypes.POINTER(AngryData_KLong))
+createNullableLongType = CFUNCTYPE(POINTER(AngryData_KLong), AngryData_KLong)
+getNonNullValueOfLongType = CFUNCTYPE(AngryData_KLong, POINTER(AngryData_KLong))
 
-createNullableFloatType = ctypes.CFUNCTYPE(ctypes.POINTER(AngryData_KFloat), AngryData_KFloat)
-getNonNullValueOfFloatType = ctypes.CFUNCTYPE(AngryData_KFloat, ctypes.POINTER(AngryData_KFloat))
+createNullableFloatType = CFUNCTYPE(POINTER(AngryData_KFloat), AngryData_KFloat)
+getNonNullValueOfFloatType = CFUNCTYPE(AngryData_KFloat, POINTER(AngryData_KFloat))
 
-createNullableDoubleType = ctypes.CFUNCTYPE(ctypes.POINTER(AngryData_KDouble), AngryData_KDouble)
-getNonNullValueOfDoubleType = ctypes.CFUNCTYPE(AngryData_KDouble, ctypes.POINTER(AngryData_KDouble))
+createNullableDoubleType = CFUNCTYPE(POINTER(AngryData_KDouble), AngryData_KDouble)
+getNonNullValueOfDoubleType = CFUNCTYPE(AngryData_KDouble, POINTER(AngryData_KDouble))
 
-createNullableCharType = ctypes.CFUNCTYPE(ctypes.POINTER(AngryData_KChar), AngryData_KChar)
-getNonNullValueOfCharType = ctypes.CFUNCTYPE(AngryData_KChar, ctypes.POINTER(AngryData_KChar))
+createNullableCharType = CFUNCTYPE(POINTER(AngryData_KChar), AngryData_KChar)
+getNonNullValueOfCharType = CFUNCTYPE(AngryData_KChar, POINTER(AngryData_KChar))
 
-createNullableBooleanType = ctypes.CFUNCTYPE(ctypes.POINTER(AngryData_KBoolean), AngryData_KBoolean)
-getNonNullValueOfBooleanType = ctypes.CFUNCTYPE(AngryData_KBoolean, ctypes.POINTER(AngryData_KBoolean))
+createNullableBooleanType = CFUNCTYPE(POINTER(AngryData_KBoolean), AngryData_KBoolean)
+getNonNullValueOfBooleanType = CFUNCTYPE(AngryData_KBoolean, POINTER(AngryData_KBoolean))
 
-createNullableUnitType = ctypes.CFUNCTYPE(ctypes.POINTER(None))  # Assuming it returns void
+createNullableUnitType = CFUNCTYPE(POINTER(None))  # Assuming it returns void
 
-createNullableUByteType = ctypes.CFUNCTYPE(ctypes.POINTER(AngryData_KUByte), AngryData_KUByte)
-getNonNullValueOfUByteType = ctypes.CFUNCTYPE(AngryData_KUByte, ctypes.POINTER(AngryData_KUByte))
+createNullableUByteType = CFUNCTYPE(POINTER(AngryData_KUByte), AngryData_KUByte)
+getNonNullValueOfUByteType = CFUNCTYPE(AngryData_KUByte, POINTER(AngryData_KUByte))
 
-createNullableUShortType = ctypes.CFUNCTYPE(ctypes.POINTER(AngryData_KUShort), AngryData_KUShort)
-getNonNullValueOfUShortType = ctypes.CFUNCTYPE(AngryData_KUShort, ctypes.POINTER(AngryData_KUShort))
+createNullableUShortType = CFUNCTYPE(POINTER(AngryData_KUShort), AngryData_KUShort)
+getNonNullValueOfUShortType = CFUNCTYPE(AngryData_KUShort, POINTER(AngryData_KUShort))
 
-createNullableUIntType = ctypes.CFUNCTYPE(ctypes.POINTER(AngryData_KUInt), AngryData_KUInt)
-getNonNullValueOfUIntType = ctypes.CFUNCTYPE(AngryData_KUInt, ctypes.POINTER(AngryData_KUInt))
+createNullableUIntType = CFUNCTYPE(POINTER(AngryData_KUInt), AngryData_KUInt)
+getNonNullValueOfUIntType = CFUNCTYPE(AngryData_KUInt, POINTER(AngryData_KUInt))
 
-createNullableULongType = ctypes.CFUNCTYPE(ctypes.POINTER(AngryData_KULong), AngryData_KULong)
-getNonNullValueOfULongType = ctypes.CFUNCTYPE(AngryData_KULong, ctypes.POINTER(AngryData_KULong))
+createNullableULongType = CFUNCTYPE(POINTER(AngryData_KULong), AngryData_KULong)
+getNonNullValueOfULongType = CFUNCTYPE(AngryData_KULong, POINTER(AngryData_KULong))
 
-class AngryData(ctypes.Structure):
+
+class Cleaner(Structure):
     _fields_ = [
-        ("DetectEmail", ctypes.CFUNCTYPE(AngryData_KInt, ctypes.c_char_p)),
+        ("cleanText", CFUNCTYPE(c_char_p, c_char_p))
     ]
 
-# Define the next level structure for packetdima
-class PacketDima(ctypes.Structure):
+class DetectFunctions(Structure):
     _fields_ = [
-        ("angrydata", AngryData),
-    ]
-
-# Define the structure for ru
-class Ru(ctypes.Structure):
-    _fields_ = [
-        ("packetdima", PacketDima),
+        ("detectAccountNumber", CFUNCTYPE(AngryData_KInt, c_char_p)),
+        ("detectAddress", CFUNCTYPE(AngryData_KInt, c_char_p)),
+        ("detectCVV", CFUNCTYPE(AngryData_KInt, c_char_p)),
+        ("detectCarNumber", CFUNCTYPE(AngryData_KInt, c_char_p)),
+        ("detectCardNumbers", CFUNCTYPE(AngryData_KInt, c_char_p)),
+        ("detectEmails", CFUNCTYPE(AngryData_KInt, c_char_p)),
+        ("detectINN", CFUNCTYPE(AngryData_KInt, c_char_p)),
+        ("detectIP", CFUNCTYPE(AngryData_KInt, c_char_p)),
+        ("detectIPv6", CFUNCTYPE(AngryData_KInt, c_char_p)),
+        ("detectLogin", CFUNCTYPE(AngryData_KInt, c_char_p)),
+        ("detectName", CFUNCTYPE(AngryData_KInt, c_char_p)),
+        ("detectOMS", CFUNCTYPE(AngryData_KInt, c_char_p)),
+        ("detectPassport", CFUNCTYPE(AngryData_KInt, c_char_p)),
+        ("detectPassword", CFUNCTYPE(AngryData_KInt, c_char_p)),
+        ("detectPhones", CFUNCTYPE(AngryData_KInt, c_char_p)),
+        ("detectSINLS", CFUNCTYPE(AngryData_KInt, c_char_p)),
+        ("detectValuableInfo", CFUNCTYPE(AngryData_KInt, c_char_p))
     ]
 
 # Define the root structure
-class Root(ctypes.Structure):
+class Root(Structure):
     _fields_ = [
-        ("ru", Ru),
+        ("cleaner", Cleaner),
+        ("detectfunctions", DetectFunctions)
     ]
 
 # Define the outermost structure for kotlin
-class Kotlin(ctypes.Structure):
+class Kotlin(Structure):
     _fields_ = [
         ("root", Root),
     ]
 
-class AngryData_ExportedSymbols(ctypes.Structure):
+class AngryData_ExportedSymbols(Structure):
     _fields_ = [
         ("DisposeStablePointer", DisposeStablePointerType),
         ("DisposeString", DisposeStringType),
@@ -151,20 +162,93 @@ class AngryData_ExportedSymbols(ctypes.Structure):
         ("kotlin", Kotlin),  # Define nested structures as needed
     ]
 
-# Access the exported symbols
-AngryData_symbols = angrydata.AngryData_symbols
-AngryData_symbols.restype = ctypes.POINTER(AngryData_ExportedSymbols)
+lib.AngryData_symbols.restype = POINTER(AngryData_ExportedSymbols)
+symbols = lib.AngryData_symbols()
 
-# Get the exported symbols
-symbols = AngryData_symbols()
+# Helper function to call functions
+def call_detect_function(function_name, t):
+    detect_functions = symbols.contents.kotlin.root.detectfunctions
+    detect_func = getattr(detect_functions, function_name)
+    detect_func.restype = AngryData_KInt
+    return detect_func(t.encode('utf-8')).value
 
+# Detect functions
+def detect_account_number(t):
+    return call_detect_function("detectAccountNumber", text)
 
-# Example usage of the DetectEmail function
-email_text = "example@mail.com"  # Ensure the string is in bytes
-detect_email_func = symbols.contents.kotlin.root.ru.packetdima.angrydata.DetectEmail
+def detect_address(text):
+    return call_detect_function("detectAddress", text)
 
-# Call the function
-result = detect_email_func(email_text.encode("utf-8"))
+def detect_cvv(text):
+    return call_detect_function("detectCVV", text)
 
-value = getNonNullValueOfIntType(result.value)
-print("DetectEmail result for string", "\"" + email_text + "\"", "is:", result.value)
+def detect_car_number(text):
+    return call_detect_function("detectCarNumber", text)
+
+def detect_card_numbers(text):
+    return call_detect_function("detectCardNumbers", text)
+
+def detect_emails(text):
+    return call_detect_function("detectEmails", text)
+
+def detect_inn(text):
+    return call_detect_function("detectINN", text)
+
+def detect_ip(text):
+    return call_detect_function("detectIP", text)
+
+def detect_ipv6(text):
+    return call_detect_function("detectIPv6", text)
+
+def detect_login(text):
+    return call_detect_function("detectLogin", text)
+
+def detect_name(text):
+    return call_detect_function("detectName", text)
+
+def detect_oms(text):
+    return call_detect_function("detectOMS", text)
+
+def detect_passport(text):
+    return call_detect_function("detectPassport", text)
+
+def detect_password(text):
+    return call_detect_function("detectPassword", text)
+
+def detect_phones(text):
+    return call_detect_function("detectPhones", text)
+
+def detect_sinls(text):
+    return call_detect_function("detectSINLS", text)
+
+def detect_valuable_info(text):
+    return call_detect_function("detectValuableInfo", text)
+
+# Clean text function
+def clean_text(text):
+    clean_func = symbols.contents.kotlin.root.cleaner.cleanText
+    clean_func.restype = c_char_p
+    cleaned = clean_func(c_char_p(text.encode('utf-8')))
+    return cleaned.decode('utf-8')
+
+with open("../kotlin-lib/src/commonTest/resources/testFiles/testText.txt", encoding="utf-8") as f:
+    text = f.read()
+    print("Original text:", text)
+    print("Cleaned text:", clean_text(text))
+    print("Detected Account Number:", detect_passport(text))
+    print("Detected Address:", detect_address(text))
+    print("Detected CVV:", detect_cvv(text))
+    print("Detected Car Number:", detect_car_number(text))
+    print("Detected Card Numbers:", detect_card_numbers(text))
+    print("Detected Emails:", detect_emails(text))
+    print("Detected INN:", detect_inn(text))
+    print("Detected IP:", detect_ip(text))
+    print("Detected IPv6:", detect_ipv6(text))
+    print("Detected Login:", detect_login(text))
+    print("Detected Name:", detect_name(text))
+    print("Detected OMS:", detect_oms(text))
+    print("Detected Passport:", detect_passport(text))
+    print("Detected Password:", detect_password(text))
+    print("Detected Phones:", detect_phones(text))
+    print("Detected SINLS:", detect_sinls(text))
+    print("Detected Valuable Info:", detect_valuable_info(text))
