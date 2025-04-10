@@ -18,21 +18,22 @@ kotlin {
         else -> throw GradleException("Host OS is not supported in Kotlin/Native.")
     }
 
-    sourceSets {
-        val commonMain by getting {
-            dependencies {
-            }
-        }
-        val commonTest by getting {
-            dependencies {
-            }
-        }
-    }
-
     nativeTarget.apply {
         binaries {
             sharedLib {
                 baseName = rootProject.name
+            }
+        }
+    }
+
+    sourceSets {
+        val commonMain by getting {
+            dependencies {
+                implementation(project(":kotlin-lib"))
+            }
+        }
+        val commonTest by getting {
+            dependencies {
             }
         }
     }

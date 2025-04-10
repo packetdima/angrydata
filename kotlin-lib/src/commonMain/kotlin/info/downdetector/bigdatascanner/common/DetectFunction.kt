@@ -1,6 +1,7 @@
 package info.downdetector.bigdatascanner.common
 
 import info.downdetector.bigdatascanner.common.constants.CardBins
+import info.downdetector.bigdatascanner.common.etenxsions.getNumericValue
 import kotlinx.serialization.Serializable
 
 @Suppress("unused")
@@ -49,10 +50,10 @@ enum class DetectFunction(override val writeName: String) : IDetectFunction {
                 var controlSum = 0
                 for (index in card.indices) {
                     controlSum += if ((index % 2) == 0) {
-                        val count = 2 * Character.getNumericValue(card[index])
+                        val count = 2 * card[index].getNumericValue()
                         if (count <= 9) count else count - 9
                     } else {
-                        Character.getNumericValue(card[index])
+                        card[index].getNumericValue()
                     }
                 }
                 return controlSum % 10 == 0
@@ -89,7 +90,7 @@ enum class DetectFunction(override val writeName: String) : IDetectFunction {
                 val snils = input.replace(" ", "").replace("-", "").trim()
 
                 for (index in 0 until snils.length - 2) {
-                    summ += Character.getNumericValue(snils[index]) * (9 - index)
+                    summ += snils[index].getNumericValue() * (9 - index)
                 }
                 val controlSum = if (listOf(100, 101).contains(summ)) {
                     "00"
@@ -129,7 +130,7 @@ enum class DetectFunction(override val writeName: String) : IDetectFunction {
              */
             fun isOmsValid(input: String): Boolean {
                 val oms = input.replace("-", "").replace("""\s+""".toRegex(), "")
-                val key = Character.getNumericValue(oms.last())
+                val key = oms.last().getNumericValue()
                 val odd = mutableListOf<Char>()  // nechet
                 val even = mutableListOf<Char>() // chet
                 oms.substring(0 until oms.length - 1).reversed().forEachIndexed { index, digit ->
@@ -144,9 +145,9 @@ enum class DetectFunction(override val writeName: String) : IDetectFunction {
                 // getValue sum of all elements
                 var summ = 0
                 for (elem in even)
-                    summ += Character.getNumericValue(elem)
+                    summ += elem.getNumericValue()
                 for (elem in right)
-                    summ += Character.getNumericValue(elem)
+                    summ += elem.getNumericValue()
                 // nearest value more or equal sum and sum % 10 = 0 minus sum
                 val checker = 10 - summ % 10
                 return checker == key || (checker == 10 && key == 0)
@@ -176,12 +177,12 @@ enum class DetectFunction(override val writeName: String) : IDetectFunction {
                 // first control sum
                 var summ1 = 0
                 for (index in firstSequence.indices)
-                    summ1 += firstSequence[index] * Character.getNumericValue(inn[index])
+                    summ1 += firstSequence[index] * inn[index].getNumericValue()
                 val key1 = (summ1 % 11).toString().last()
                 // second control sum
                 var summ2 = 0
                 for (index in secondSequence.indices)
-                    summ2 += secondSequence[index] * Character.getNumericValue(inn[index])
+                    summ2 += secondSequence[index] * inn[index].getNumericValue()
                 val key2 = (summ2 % 11).toString().last()
                 return key1 == inn[10] && key2 == inn[11]
             }
